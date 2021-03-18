@@ -1,0 +1,26 @@
+trigger:
+- master
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    displayName: Build
+
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - checkout: self
+    - task: CopyFiles@2
+      displayName: Copy Repo Files
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Build Artifact
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'Static'
+        publishLocation: 'Container'
